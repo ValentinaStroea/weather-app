@@ -7,35 +7,46 @@ import {
   showError,
   displayWeather,
   getCityInput,
-  clearInput
+  clearInput,
+  saveUserPreferences,
+  loadUserPreferences,
+  setPreferenceControls
 } from './modules/ui-controller.js';
 
-// Validează numele orașului
-const isValidCity = (city) => {
-  return city.length >= 2 && /^[a-zA-ZăâîșțĂÂÎȘȚ\s-]+$/.test(city);
-};
+let currentCity = "București"; // orașul activ
+let preferences = loadUserPreferences(); // încarcă preferințele salvate
 
-const handleSearch = async () => {
-  const city = getCityInput();
-
-  if (!isValidCity(city)) {
-    showError("Introduceți un oraș valid (minim 2 litere, fără cifre).");
-    return;
-  }
-
+// Refă căutarea cu orașul curent și preferințele actuale
+const fetchWeather = async (city) => {
   showLoading();
-
   try {
-    const data = await getCurrentWeather(city);
+    const data = await getCurrentWeather(city, preferences.unit, preferences.lang);
     hideLoading();
     displayWeather(data);
-    clearInput();
   } catch (error) {
     hideLoading();
     showError("A apărut o eroare la căutarea vremii.");
   }
 };
 
+// Verifică dacă orașul introdus este valid
+const isValidCity = (city) => {
+  return city.length >= 2 && /^[a-zA-ZăâîșțĂÂÎȘȚ\s-]+$/.test(city);
+};
+
+// Buton sau Enter
+const handleSearch = async () => {
+  const city = getCityInput();
+  if (!isValidCity(city)) {
+    showError("Introduceți un oraș valid (minim 2 litere, fără cifre).");
+    return;
+  }
+  currentCity = city;
+  await fetchWeather(city);
+  clearInput();
+};
+
+// Ascultă evenimente UI
 const setupEventListeners = () => {
   elements.searchBtn.addEventListener('click', handleSearch);
 
@@ -44,10 +55,29 @@ const setupEventListeners = () => {
       handleSearch();
     }
   });
+
+  // Când se schimbă unitățile
+  elements.unitSelect.addEventListener('change', () => {
+    preferences.unit = elements.unitSelect.value;
+    saveUserPreferences(preferences.unit, preferences.lang);
+    fetchWeather(currentCity);
+  });
+
+  // Când se schimbă limba
+  elements.langSelect.addEventListener('change', () => {
+    preferences.lang = elements.langSelect.value;
+    saveUserPreferences(preferences.unit, preferences.lang);
+    fetchWeather(currentCity);
+  });
 };
 
 // Inițializare aplicație
-setupEventListeners();
+const init = () => {
+  setPreferenceControls(preferences); // setează UI cu preferințele salvate
+  setupEventListeners();
+  document.getElementById("city-input").value = currentCity;
+  fetchWeather(currentCity); // caută la pornire
+};
 
-// Opțional: afișează vremea pentru un oraș default la pornire
-handleSearch("București");
+init();
+

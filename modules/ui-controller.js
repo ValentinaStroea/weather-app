@@ -1,5 +1,4 @@
 // modules/ui-controller.js
-
 export const elements = {
   cityInput: document.querySelector('#city-input'),
   searchBtn: document.querySelector('#search-btn'),
@@ -15,7 +14,9 @@ export const elements = {
   wind: document.querySelector('#wind'),
   visibility: document.querySelector('#visibility'),
   sunrise: document.querySelector('#sunrise'),
-  sunset: document.querySelector('#sunset')
+  sunset: document.querySelector('#sunset'),
+  unitSelect: document.querySelector('#unit-select'),
+  langSelect: document.querySelector('#lang-select')
 };
 
 // Format timp din timestamp Unix
@@ -45,9 +46,9 @@ export const showError = (msg) => {
 
 export const displayWeather = (data) => {
   elements.cityName.textContent = data.name;
-  elements.temperature.textContent = `${data.main.temp}°C`;
+  updateTemperatureDisplay(data.main.temp, elements.unitSelect.value);
   elements.description.textContent = data.weather[0].description;
-  elements.weatherIcon.textContent = '🌤️'; // Poți folosi și imagini dacă vrei
+  elements.weatherIcon.textContent = '🌤️'; // sau imagine
 
   elements.humidity.textContent = `Umiditate: ${data.main.humidity}%`;
   elements.pressure.textContent = `Presiune: ${data.main.pressure} hPa`;
@@ -60,6 +61,34 @@ export const displayWeather = (data) => {
 };
 
 export const getCityInput = () => elements.cityInput.value.trim();
+
 export const clearInput = () => {
   elements.cityInput.value = '';
 };
+
+// Afișează temperatura cu simbolul corespunzător
+export const updateTemperatureDisplay = (temp, unit) => {
+  const symbol = unit === 'imperial' ? '°F' : '°C';
+  elements.temperature.textContent = `${temp}${symbol}`;
+};
+
+// Salvează preferințele în localStorage
+export const saveUserPreferences = (unit, lang) => {
+  localStorage.setItem('unit', unit);
+  localStorage.setItem('lang', lang);
+};
+
+// Încarcă preferințele din localStorage
+export const loadUserPreferences = () => {
+  return {
+    unit: localStorage.getItem('unit') || 'metric',
+    lang: localStorage.getItem('lang') || 'ro'
+  };
+};
+
+// (Opțional) Setează valorile în dropdown-uri la pornire
+export const setPreferenceControls = ({ unit, lang }) => {
+  elements.unitSelect.value = unit;
+  elements.langSelect.value = lang;
+};
+
