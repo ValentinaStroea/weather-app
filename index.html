@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="module" src="app.js" defer></script>
+</head>
+<body>
+  <div id="app">
+    <h1>Weather App</h1>
+
+    <div class="search-section">
+      <input type="text" id="city-input" placeholder="Introdu numele orașului" />
+      <button id="search-btn">Caută</button>
+    </div>
+
+    <div id="loading" class="hidden">Se încarcă...</div>
+    <div id="error" class="hidden"></div>
+
+    <div id="weather-display" class="weather-card hidden">
+      <h2 id="city-name"></h2>
+      <div class="temperature">
+        <span id="weather-icon">🌤️</span>
+        <span id="temperature"></span>
+      </div>
+      <p id="description"></p>
+      <ul class="details">
+        <li id="humidity"></li>
+        <li id="pressure"></li>
+        <li id="wind"></li>
+        <li id="visibility"></li>
+        <li id="sunrise"></li>
+        <li id="sunset"></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
