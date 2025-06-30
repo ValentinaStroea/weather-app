@@ -1,4 +1,8 @@
 # Weather App – Aplicație Meteo
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![Weather API](https://img.shields.io/badge/API-OpenWeatherMap-orange)
 
 Aceasta este o aplicație meteo simplă și intuitivă, construită cu **HTML**, **CSS** și **JavaScript**, care oferă informații despre vreme folosind API-ul de la [OpenWeatherMap](https://openweathermap.org/).
 
