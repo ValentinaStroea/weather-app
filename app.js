@@ -1,5 +1,17 @@
 // app.js
+
+import { historyService } from './modules/history-service.js';
+import { logger } from './modules/logger.js';
+
+import {
+  showHistory,
+  hideHistory,
+  renderHistory,
+  addHistoryEventListeners
+} from './modules/ui-controller.js';
+
 import { getCurrentWeather } from './modules/weather-service.js';
+
 import {
   elements,
   showLoading,
@@ -23,9 +35,16 @@ const fetchWeather = async (city) => {
     const data = await getCurrentWeather(city, preferences.unit, preferences.lang);
     hideLoading();
     displayWeather(data);
+
+    historyService.addLocation(data);
+    renderHistory(historyService.getHistory());
+    showHistory();
+
+    logger.info("Vremea a fost încărcată cu succes", { city });
   } catch (error) {
     hideLoading();
     showError("A apărut o eroare la căutarea vremii.");
+    logger.error("Eroare la fetchWeather", error);
   }
 };
 
@@ -34,7 +53,7 @@ const isValidCity = (city) => {
   return city.length >= 2 && /^[a-zA-ZăâîșțĂÂÎȘȚ\s-]+$/.test(city);
 };
 
-// Buton sau Enter
+// Căutare când se apasă pe buton sau Enter
 const handleSearch = async () => {
   const city = getCityInput();
   if (!isValidCity(city)) {
@@ -46,6 +65,28 @@ const handleSearch = async () => {
   clearInput();
 };
 
+// Click pe un item din istoric
+const handleHistoryClick = (e) => {
+  const item = e.target.closest('.history-item');
+  if (!item) return;
+
+  const city = item.dataset.city;
+  if (city) {
+    currentCity = city;
+    fetchWeather(city);
+  }
+};
+
+// Click pe "Șterge istoric"
+const handleClearHistory = () => {
+  if (confirm('Sigur dorești să ștergi tot istoricul?')) {
+    historyService.clearHistory();
+    renderHistory([]);
+    hideHistory();
+  }
+};
+
+
 // Ascultă evenimente UI
 const setupEventListeners = () => {
   elements.searchBtn.addEventListener('click', handleSearch);
@@ -55,6 +96,9 @@ const setupEventListeners = () => {
       handleSearch();
     }
   });
+
+  // conectăm separat evenimentele pentru istoric
+  addHistoryEventListeners(handleHistoryClick, handleClearHistory);
 
   // Când se schimbă unitățile
   elements.unitSelect.addEventListener('change', () => {
@@ -77,7 +121,13 @@ const init = () => {
   setupEventListeners();
   document.getElementById("city-input").value = currentCity;
   fetchWeather(currentCity); // caută la pornire
+
+  // Afișează istoric dacă există
+  const history = historyService.getHistory();
+  if (history.length > 0) {
+    renderHistory(history);
+    showHistory();
+  }
 };
 
 init();
-

@@ -1,5 +1,8 @@
 // modules/ui-controller.js
 export const elements = {
+  historySection: document.querySelector('#history-section'),
+  historyList: document.querySelector('#history-list'),
+  clearHistoryBtn: document.querySelector('#clear-history-btn'),
   cityInput: document.querySelector('#city-input'),
   searchBtn: document.querySelector('#search-btn'),
   loading: document.querySelector('#loading'),
@@ -91,4 +94,61 @@ export const setPreferenceControls = ({ unit, lang }) => {
   elements.unitSelect.value = unit;
   elements.langSelect.value = lang;
 };
+
+// Afișează secțiunea de istoric
+export const showHistory = () => {
+  elements.historySection.classList.remove('hidden');
+};
+
+// Ascunde secțiunea de istoric
+export const hideHistory = () => {
+  elements.historySection.classList.add('hidden');
+};
+
+// Timp relativ (ex: "2 ore în urmă")
+const getTimeAgo = (timestamp) => {
+  const now = Date.now();
+  const diff = now - timestamp;
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (minutes < 1) return 'chiar acum';
+  if (minutes < 60) return `${minutes} min în urmă`;
+  if (hours < 24) return `${hours} h în urmă`;
+  return `${days} zile în urmă`;
+};
+
+// Afișează istoric în interfață
+export const renderHistory = (historyItems) => {
+  if (historyItems.length === 0) {
+    elements.historyList.innerHTML =
+      '<p class="no-history">Nu ai căutări recente</p>';
+    return;
+  }
+
+  const html = historyItems
+    .map((item) => {
+      const timeAgo = getTimeAgo(item.timestamp);
+      return `
+        <div class="history-item" data-city="${item.city}" data-lat="${item.coordinates.lat}" data-lon="${item.coordinates.lon}">
+          <div class="history-location">
+            <span class="city">${item.city}</span>
+            <span class="country">${item.country}</span>
+          </div>
+          <div class="history-time">${timeAgo}</div>
+        </div>
+      `;
+    })
+    .join('');
+
+  elements.historyList.innerHTML = html;
+};
+
+// Event listeners pentru click pe item și butonul de ștergere
+export const addHistoryEventListeners = (onItemClick, onClear) => {
+  elements.historyList.addEventListener('click', onItemClick);
+  elements.clearHistoryBtn.addEventListener('click', onClear);
+};
+
 
