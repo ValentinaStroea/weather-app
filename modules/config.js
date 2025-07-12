@@ -14,7 +14,8 @@ export const isProd = isProduction;
 
 // Config global al aplicației
 export const CONFIG = {
-  API_KEY: import.meta.env?.VITE_API_KEY || 'default_fallback_key',
+ export const CONFIG = {
+  API_KEY: "92d8a2c9e59396bad2081f577fc915f4",
   ENVIRONMENT: import.meta.env?.VITE_ENV || 'development',
   API_BASE_URL: 'https://api.openweathermap.org/data/2.5',
   DEFAULT_UNITS: 'metric',
