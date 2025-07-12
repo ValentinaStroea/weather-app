@@ -53,22 +53,6 @@ Aplicația este publicată și disponibilă online la:
 https://valentinastroea.github.io/weather-app
 <img width="1091" height="629" alt="image" src="https://github.com/user-attachments/assets/b52e673b-3833-4f5d-b774-e0ce846367c1" />
 
-
-📄 Structura proiectului
-
-weather-app/
-├── index.html              # Entry point
-├── styles.css              # Styling global
-├── app.js                  # Orchestrare principală
-├── modules/
-│   ├── config.js           # Config centralizat
-│   ├── weather-service.js  # Comunicare cu API
-│   ├── location-service.js # Locație GPS/IP (dacă se folosește)
-│   ├── ui-controller.js    # Gestionare interfață
-│   ├── history-service.js  # Istoric căutări
-│   └── logger.js           # Logging & debugging
-└── README.md
-
 🧪 Screenshots
 
 Căutare oraș
