@@ -51,6 +51,8 @@ VS Code
 
 Aplicația este publicată și disponibilă online la:
 https://valentinastroea.github.io/weather-app
+<img width="1091" height="629" alt="image" src="https://github.com/user-attachments/assets/b52e673b-3833-4f5d-b774-e0ce846367c1" />
+
 
 📄 Structura proiectului
 
