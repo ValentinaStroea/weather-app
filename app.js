@@ -10,7 +10,8 @@ import {
   addHistoryEventListeners
 } from './modules/ui-controller.js';
 
-import { getCurrentWeather } from './modules/weather-service.js';
+import { getCurrentWeatherWithFallback } from './modules/weather-service.js';
+
 
 import {
   elements,
@@ -32,10 +33,15 @@ let preferences = loadUserPreferences(); // încarcă preferințele salvate
 const fetchWeather = async (city) => {
   showLoading();
   try {
-    const data = await getCurrentWeather(city, preferences.unit, preferences.lang);
+    const data = await getCurrentWeatherWithFallback(city, preferences.unit, preferences.lang);
     hideLoading();
-    displayWeather(data);
 
+   if (data.fallback) {
+  showError(data.fallbackReason || "Introduceți un oraș valid sau verificați conexiunea.");
+  return;
+}
+
+    displayWeather(data);
     historyService.addLocation(data);
     renderHistory(historyService.getHistory());
     showHistory();
